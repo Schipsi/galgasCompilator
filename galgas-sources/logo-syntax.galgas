@@ -1,0 +1,46 @@
+syntax logo_syntax (logo_lexique) {
+
+rule
+  <start_symbol>
+  {
+  #-- Définition des routines
+  $PROGRAM$
+  @routineMap tableRoutines = {}
+  repeat
+  while
+    <routine_definition> !?tableRoutines
+  end
+  #--- Programme principal
+  $BEGIN$
+  <instruction_list>
+  $END$
+  $.$
+}
+
+rule
+  <routine_definition> ?!@routineMap ioTableRoutines
+  {
+  $ROUTINE$
+  $identifier$ ?let @lstring unNom
+  log unNom
+  $BEGIN$
+  <instruction_list>
+  [!?ioTableRoutines insertKey !unNom]
+  $END$
+}
+
+rule <instruction_list> {
+  repeat
+  while
+    select $FORWARD$ $integer$ ?* $;$
+    or $ROTATE$ $integer$ ?* $;$
+    or $PEN$ select $UP$ $;$
+      or $DOWN$ $;$
+      end
+    or $CALL$ $identifier$ ?let @lstring unNom $;$ log unNom
+    end
+  end
+}
+
+# ADD OTHER RULES
+}
